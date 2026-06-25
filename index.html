@@ -3,26 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Waldfunk Rätsel</title>
+    <title>Waldfunk Eichhörnchen-Rätsel</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Wir versuchen es ohne externe React-Quellen, indem wir die Logik vereinfachen -->
 </head>
 <body class="bg-[#fdf6e3]">
     <div id="root" class="min-h-screen flex items-center justify-center p-4">
-        <div class="max-w-xl bg-white p-10 rounded-3xl shadow-xl text-center">
-            <h1 id="status" class="text-2xl font-bold text-amber-900">Das Rätsel bereitet sich vor...</h1>
+        <div id="app" class="max-w-2xl w-full bg-white p-8 rounded-3xl shadow-xl text-center">
+            <h1 class="text-3xl font-bold text-amber-900 mb-6">Der Waldfunk</h1>
+            <p id="message" class="text-lg text-amber-800 mb-8">Frank von Wald hier – bereit für eine kleine Wissensreise durch unsere Wälder?</p>
+            <button id="startBtn" class="bg-amber-800 text-white px-8 py-3 rounded-full hover:bg-amber-900 transition">Rätsel starten</button>
         </div>
     </div>
 
     <script>
-        // Ein einfaches, direktes Script, das ohne externe React-Abhängigkeit auskommt
-        // um zu sehen, ob das Problem am Laden der Bibliotheken liegt.
-        window.onload = function() {
-            const status = document.getElementById('status');
-            status.innerText = "Der Waldfunk ist bereit! Das Rätsel lädt nun direkt.";
-            
-            // Wenn dies erscheint, können wir das Spiel hier in purem JavaScript einbetten.
-            // Lass uns wissen, ob du diesen Text siehst!
+        const app = document.getElementById('app');
+        const startBtn = document.getElementById('startBtn');
+        const message = document.getElementById('message');
+
+        const quizData = [
+            { q: "Wofür nutzen wir Eichhörnchen unseren Schwanz am liebsten?", a: ["Steuern & Wärmen", "Verscheuchen", "Nüsse", "Regenschirm"], correct: 0 },
+            { q: "Wie finden wir unsere Vorräte wieder?", a: ["Markierung", "Geruch & Gedächtnis", "Graben", "Schatzkarte"], correct: 1 },
+            { q: "Wie heißt unser Nest in den Baumkronen?", a: ["Horst", "Höhle", "Kobel", "Wipfelburg"], correct: 2 }
+        ];
+
+        let currentQ = 0;
+
+        startBtn.onclick = () => {
+            showQuestion();
+        };
+
+        function showQuestion() {
+            const data = quizData[currentQ];
+            app.innerHTML = `
+                <h2 class="text-2xl font-bold mb-6">${data.q}</h2>
+                <div class="space-y-3">
+                    ${data.a.map((opt, i) => `
+                        <button onclick="checkAnswer(${i})" class="w-full p-4 rounded-xl border-2 border-amber-200 hover:bg-amber-50">${opt}</button>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        window.checkAnswer = (idx) => {
+            const isCorrect = idx === quizData[currentQ].correct;
+            app.innerHTML = `
+                <h2 class="text-2xl font-bold mb-6">${isCorrect ? 'Exzellent!' : 'Fast!'}</h2>
+                <p class="mb-6">${isCorrect ? 'Richtig, mein bester!' : 'Das war leider nicht korrekt.'}</p>
+                <button onclick="next()" class="bg-amber-800 text-white px-8 py-3 rounded-full">Weiter</button>
+            `;
+        };
+
+        window.next = () => {
+            currentQ++;
+            if (currentQ < quizData.length) {
+                showQuestion();
+            } else {
+                app.innerHTML = `<h2 class="text-3xl font-bold text-amber-900">Geschafft! Frank von Wald bedankt sich für die Aufmerksamkeit.</h2>`;
+            }
         };
     </script>
 </body>

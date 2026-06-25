@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waldfunk Eichhörnchen-Rätsel</title>
+    
+    <!-- Tailwind CSS für das Design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    
+    <!-- Babel (übersetzt den React-Code im Browser) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-[#fdf6e3]">
+    <div id="root"></div>
+
+    <script type="text/babel" data-presets="react">
+        // WICHTIG: In dieser HTML-Version dürfen KEINE "import ..." Befehle stehen!
+        // Wir laden React direkt über die Script-Tags oben.
+        const { useState } = React;
+
+        // --- SVGs als Ersatz für die Icons ---
+        const IconTree = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m17 14 3 3.3a1 1 0 0 1-.7 1.7H4.7a1 1 0 0 1-.7-1.7L7 14h-.3a1 1 0 0 1-.7-1.7L9 9h-.2A1 1 0 0 1 8 7.3L12 3l4 4.3a1 1 0 0 1-.8 1.7H15l3 3.3a1 1 0 0 1-.8 1.7H17Z"/><path d="M12 19v3"/></svg>
+        );
+        const IconMic = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+        );
+        const IconAward = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+        );
+        const IconChevronRight = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m9 18 6-6-6-6"/></svg>
+        );
+        const IconRotate = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        );
+        const IconInfo = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        );
+
+        // --- DIE FRAGEN DES WALDFUNKS ---
+        const quizData = [
+          {
+            question: "Wofür nutzen wir Eichhörnchen unseren prächtigen, buschigen Schwanz am liebsten?",
+            options: [
+              "Um uns im Winter zuzudecken und beim Springen zu steuern",
+              "Um andere Tiere lautstark zu verscheuchen",
+              "Um Nüsse darin zu verstecken",
+              "Als Regenschirm bei starkem Schauer"
+            ],
+            answerIndex: 0,
+            frankSays: "Ganz recht! Er ist mein liebstes Kleidungsstück, gleich nach meinem Tweed-Sakko. Er hält mich warm und lässt mich elegant von Ast zu Ast segeln."
+          },
+          {
+            question: "Wie finden wir unsere vergrabenen Vorräte in der kalten Jahreszeit wieder?",
+            options: [
+              "Wir legen kleine Steinchen als Markierung aus",
+              "Durch unseren exzellenten Geruchssinn und unser räumliches Gedächtnis",
+              "Wir graben einfach den ganzen Waldboden um",
+              "Wir teilen uns eine große Schatzkarte mit anderen Hörnchen"
+            ],
+            answerIndex: 1,
+            frankSays: "Exakt! Meine Nase führt mich sicher zu jedem noch so tief vergrabenen Zapfen. Unser Geist ist wach und die Sinne sind geschärft!"
+          },
+          {
+            question: "Halten wir Eichhörnchen eigentlich einen tiefen, ununterbrochenen Winterschlaf?",
+            options: [
+              "Ja, wir schlafen durchgehend bis zum Frühling",
+              "Nein, wir halten eine Winterruhe und wachen oft auf, um zu fressen",
+              "Wir wandern in den warmen Süden aus",
+              "Wir schlafen nur tagsüber und sind nachts wach"
+            ],
+            answerIndex: 1,
+            frankSays: "Wahrhaftig! Ich könnte niemals monatelang auf meine geliebten Walnüsse verzichten. Wir wachen auf, stärken uns und ruhen dann weiter in unserem gemütlichen Kobel."
+          },
+          {
+            question: "Wie nennt Ihr Zweibeiner unser kunstvoll gebautes Nest in den Baumkronen?",
+            options: [
+              "Horst",
+              "Höhle",
+              "Kobel",
+              "Wipfelburg"
+            ],
+            answerIndex: 2,
+            frankSays: "Richtig! Ein wohliges Heim, ausgepolstert mit weichem Moos und Rinde. Der perfekte Ort, um über die Natur und das Leben zu philosophieren."
+          },
+          {
+            question: "Welche Farbe hat das Fell von uns heimischen, europäischen Eichhörnchen meistens?",
+            options: [
+              "Grau mit schwarzen Streifen",
+              "Rot bis schwarzbraun, stets mit einem hellen, weißen Bauch",
+              "Komplett schwarz wie die Nacht",
+              "Braun mit weißen Punkten"
+            ],
+            answerIndex: 1,
+            frankSays: "So ist es! Und dieses edle Fell passt ganz hervorragend zu den herbstlichen Farben des Frankenwaldes."
+          }
+        ];
+
+        function WaldfunkQuiz() {
+          const [hasStarted, setHasStarted] = useState(false);
+          const [currentQuestion, setCurrentQuestion] = useState(0);
+          const [score, setScore] = useState(0);
+          const [showResults, setShowResults] = useState(false);
+          const [selectedAnswer, setSelectedAnswer] = useState(null);
+          const [isAnswerCorrect, setIsAnswerCorrect] = useState(null);
+
+          const handleStart = () => setHasStarted(true);
+
+          const handleAnswerClick = (index) => {
+            if (selectedAnswer !== null) return;
+            setSelectedAnswer(index);
+            const correct = index === quizData[currentQuestion].answerIndex;
+            setIsAnswerCorrect(correct);
+            if (correct) setScore(score + 1);
+          };
+
+          const handleNextQuestion = () => {
+            if (currentQuestion + 1 < quizData.length) {
+              setCurrentQuestion(currentQuestion + 1);
+              setSelectedAnswer(null);
+              setIsAnswerCorrect(null);
+            } else {
+              setShowResults(true);
+            }
+          };
+
+          const handleRestart = () => {
+            setHasStarted(false);
+            setCurrentQuestion(0);
+            setScore(0);
+            setShowResults(false);
+            setSelectedAnswer(null);
+            setIsAnswerCorrect(null);
+          };
+
+          const FrankHeader = () => (
+            <div className="flex items-center justify-center space-x-3 mb-6 pb-4 border-b-2 border-amber-800/20">
+              <div className="bg-amber-100 p-3 rounded-full text-amber-800">
+                <IconMic size={28} />
+              </div>
+              <h1 className="text-3xl font-serif font-bold text-amber-900 tracking-wide">
+                Der Waldfunk
+              </h1>
+              <div className="bg-amber-100 p-3 rounded-full text-amber-800">
+                <IconTree size={28} />
+              </div>
+            </div>
+          );
+
+          if (!hasStarted) {
+            return (
+              <div className="min-h-screen flex items-center justify-center p-4 font-sans">
+                <div className="max-w-2xl w-full bg-white rounded-3xl shadow-xl border-4 border-amber-900/10 p-8 md:p-12 text-center">
+                  <FrankHeader />
+                  <div className="space-y-6">
+                    <p className="text-2xl font-serif italic text-amber-800">
+                      "Frank von Wald hier – direkt aus dem Herzen unseres geliebten Waldes!"
+                    </p>
+                    <p className="text-lg text-gray-700 leading-relaxed">
+                      Seid gegrüßt, liebe Freunde! Unlängst saß ich auf meiner Lieblingsfichte, rückte meine orange-braune Brille zurecht und dachte mir: Wie gut kennt Ihr Zweibeiner uns Eichhörnchen eigentlich? Das Band zwischen Mensch und Natur ist stark, doch lasst uns schauen, wie viel Waldgeist wirklich in Euch steckt.
+                    </p>
+                    <p className="text-lg text-gray-700 font-medium pb-4">
+                      Tretet ein in mein kleines Rätselspiel!
+                    </p>
+                    <button 
+                      onClick={handleStart}
+                      className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white bg-amber-800 rounded-full overflow-hidden transition-transform transform hover:scale-105 shadow-lg hover:bg-amber-900"
+                    >
+                      <span className="mr-2">Das Rätsel beginnen</span>
+                      <IconChevronRight className="group-hover:translate-x-1 transition-transform" size={24} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          if (showResults) {
+            const isPerfect = score === quizData.length;
+            return (
+              <div className="min-h-screen flex items-center justify-center p-4 font-sans">
+                <div className="max-w-2xl w-full bg-white rounded-3xl shadow-xl border-4 border-amber-900/10 p-8 md:p-12 text-center">
+                  <FrankHeader />
+                  <div className="mb-8">
+                    <div className="flex justify-center text-amber-600 mb-4">
+                      <IconAward size={64} />
+                    </div>
+                    <h2 className="text-4xl font-serif font-bold text-amber-900 mb-2">
+                      {score} von {quizData.length} Nüssen gesammelt!
+                    </h2>
+                  </div>
+                  <div className="space-y-6 text-lg text-gray-700 leading-relaxed mb-8">
+                    {isPerfect ? (
+                      <p>
+                        Wahrlich meisterhaft! Ihr teilt den Waldgeist mit uns. Ich ziehe mein Tweed-Sakko vor so viel Naturverbundenheit. Es wärmt mir das Herz zu sehen, wie gut Ihr über unsere Wälder und ihre Bewohner Bescheid wisst.
+                      </p>
+                    ) : (
+                      <p>
+                        Ein tapferer Versuch, liebe Freunde! Der Wald birgt noch viele Geheimnisse, die Ihr entdecken werdet. Jeder Zapfen fällt mal daneben. Wichtig ist nur, dass wir die Verbundenheit zur Natur stets in unseren Herzen tragen.
+                      </p>
+                    )}
+                    <p className="font-serif italic text-amber-800 text-xl pt-4 border-t-2 border-amber-100">
+                      Bleibt neugierig, haltet die Ohren steif! Frank von Wald für den Waldfunk – bis in Bälde zwischen Tannen und fliegenden Nüssen!
+                    </p>
+                  </div>
+                  <button 
+                    onClick={handleRestart}
+                    className="inline-flex items-center px-6 py-3 font-semibold text-amber-900 bg-amber-100 rounded-full hover:bg-amber-200 transition-colors"
+                  >
+                    <IconRotate className="mr-2" size={20} />
+                    Erneut versuchen
+                  </button>
+                </div>
+              </div>
+            );
+          }
+
+          const currentQ = quizData[currentQuestion];
+
+          return (
+            <div className="min-h-screen flex flex-col items-center justify-center p-4 font-sans">
+              <div className="max-w-2xl w-full bg-white rounded-3xl shadow-xl border-4 border-amber-900/10 overflow-hidden">
+                <div className="w-full bg-amber-100 h-3">
+                  <div 
+                    className="bg-amber-800 h-3 transition-all duration-500 ease-out"
+                    style={{ width: `${((currentQuestion) / quizData.length) * 100}%` }}
+                  ></div>
+                </div>
+                <div className="p-8 md:p-10">
+                  <div className="flex justify-between items-center mb-6 text-amber-800 font-semibold">
+                    <span className="flex items-center"><IconTree size={20} className="mr-2"/> Waldfunk Rätsel</span>
+                    <span>Frage {currentQuestion + 1} von {quizData.length}</span>
+                  </div>
+                  <h2 className="text-2xl md:text-3xl font-serif font-bold text-gray-800 mb-8 leading-snug">
+                    {currentQ.question}
+                  </h2>
+                  <div className="space-y-4 mb-8">
+                    {currentQ.options.map((option, index) => {
+                      let buttonStyle = "bg-gray-50 border-gray-200 hover:bg-amber-50 hover:border-amber-300 text-gray-700";
+                      if (selectedAnswer !== null) {
+                        if (index === currentQ.answerIndex) {
+                          buttonStyle = "bg-green-100 border-green-500 text-green-900 font-medium";
+                        } else if (index === selectedAnswer) {
+                          buttonStyle = "bg-red-100 border-red-500 text-red-900";
+                        } else {
+                          buttonStyle = "bg-gray-50 border-gray-200 opacity-50";
+                        }
+                      }
+                      return (
+                        <button
+                          key={index}
+                          onClick={() => handleAnswerClick(index)}
+                          disabled={selectedAnswer !== null}
+                          className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${buttonStyle}`}
+                        >
+                          <div className="flex items-center">
+                            <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center mr-4 flex-shrink-0 font-serif text-amber-800 font-bold border border-gray-100">
+                              {String.fromCharCode(65 + index)}
+                            </div>
+                            <span className="text-lg">{option}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {selectedAnswer !== null && (
+                    <div className={`p-6 rounded-2xl mb-8 flex gap-4 ${isAnswerCorrect ? 'bg-green-50 text-green-900' : 'bg-amber-50 text-amber-900'}`}>
+                       <IconInfo className="flex-shrink-0 mt-1" size={24} />
+                       <div>
+                         <p className="font-serif italic text-lg mb-1">
+                           {isAnswerCorrect ? '"Exzellent kombiniert!"' : '"Fast, liebe Freunde, fast!"'}
+                         </p>
+                         <p className="leading-relaxed">
+                           {currentQ.frankSays}
+                         </p>
+                       </div>
+                    </div>
+                  )}
+                  <div className="flex justify-end mt-4">
+                    <button
+                      onClick={handleNextQuestion}
+                      disabled={selectedAnswer === null}
+                      className={`inline-flex items-center px-8 py-3 rounded-full font-bold transition-all ${
+                        selectedAnswer !== null 
+                          ? 'bg-amber-800 text-white hover:bg-amber-900 shadow-md hover:-translate-y-0.5' 
+                          : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      }`}
+                    >
+                      {currentQuestion + 1 === quizData.length ? 'Zum Ergebnis' : 'Nächste Frage'}
+                      <IconChevronRight className="ml-2" size={20} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<WaldfunkQuiz />);
+    </script>
+</body>
+</html>

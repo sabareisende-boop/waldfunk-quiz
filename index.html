@@ -6,12 +6,12 @@
     <title>Waldfunk Eichhörnchen-Rätsel</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#fdf6e3]">
+<body class="bg-emerald-50 text-emerald-950 min-h-screen">
     <div id="root" class="min-h-screen flex items-center justify-center p-4">
-        <div id="app" class="max-w-2xl w-full bg-white p-8 rounded-3xl shadow-xl text-center border-4 border-amber-100">
-            <h1 class="text-3xl font-bold text-amber-900 mb-6 font-serif">Der Waldfunk</h1>
-            <p id="message" class="text-lg text-amber-800 mb-8 italic">Frank von Wald hier – bereit für eine kleine Wissensreise durch unsere Wälder?</p>
-            <button id="startBtn" class="bg-amber-800 text-white px-8 py-3 rounded-full hover:bg-amber-900 transition-all transform hover:scale-105 shadow-md">Rätsel starten</button>
+        <div id="app" class="max-w-2xl w-full bg-white p-8 rounded-3xl shadow-xl text-center border-2 border-emerald-100">
+            <h1 class="text-4xl font-bold text-emerald-800 mb-6 font-serif">Der Waldfunk</h1>
+            <p id="message" class="text-lg text-emerald-700 mb-8 italic">Bereit für eine Wissensreise über 10 Stationen durch unsere Wälder?</p>
+            <button id="startBtn" class="bg-emerald-700 text-white px-8 py-3 rounded-full hover:bg-emerald-800 transition-all transform hover:scale-105 shadow-md font-semibold">10 Haselnüsse sammeln</button>
         </div>
     </div>
 
@@ -19,9 +19,16 @@
         const app = document.getElementById('app');
 
         const quizData = [
-            { q: "Wofür nutzen wir Eichhörnchen unseren buschigen Schwanz am liebsten?", a: ["Steuern & Wärmen", "Verscheuchen", "Nüsse", "Regenschirm"], correct: 0, story: "Exzellent! Er ist mein liebstes Kleidungsstück und hilft mir beim Springen." },
-            { q: "Wie finden wir unsere Vorräte wieder?", a: ["Markierung", "Geruch & Gedächtnis", "Graben", "Schatzkarte"], correct: 1, story: "Exakt! Meine Nase führt mich sicher zu jedem noch so tief vergrabenen Zapfen." },
-            { q: "Wie heißt unser Nest in den Baumkronen?", a: ["Horst", "Höhle", "Kobel", "Wipfelburg"], correct: 2, story: "Richtig! Ein wohliges Heim, ausgepolstert mit weichem Moos." }
+            { q: "Wofür nutzen wir Eichhörnchen unseren buschigen Schwanz am liebsten?", a: ["Steuern & Wärmen", "Verscheuchen", "Nüsse", "Regenschirm"], correct: 0, storyCorrect: "Wahrhaftig! Er ist mein liebstes Kleidungsstück, hilft beim Steuern während der Sprünge und wärmt mich in kalten Nächten.", storyWrong: "Nicht ganz. Der Schwanz ist vielmehr mein Steuerinstrument in der Luft und meine kuschelige Decke in der Nacht." },
+            { q: "Wie finden wir unsere Vorräte wieder?", a: ["Markierung", "Geruch & Gedächtnis", "Graben", "Schatzkarte"], correct: 1, storyCorrect: "Exakt! Meine Nase führt mich sicher und mein Gedächtnis speichert die Orte – ein wahres Wunder der Natur.", storyWrong: "Leider nein. Eine Schatzkarte besitze ich nicht! Meine Nase und mein Gedächtnis sind meine treuesten Begleiter." },
+            { q: "Wie heißt unser Nest in den Baumkronen?", a: ["Horst", "Höhle", "Kobel", "Wipfelburg"], correct: 2, storyCorrect: "Richtig! Ein wohliges Heim, ausgepolstert mit weichem Moos und Rinde.", storyWrong: "Ein 'Kobel' ist das Wort, das Ihr sucht! Ein echtes Wipfel-Domizil." },
+            { q: "Welche Farbe kann unser Fell alles haben?", a: ["Nur Rot", "Rot, Braun oder Schwarz (mit hellem Bauch)", "Nur Blau", "Nur Weiß"], correct: 1, storyCorrect: "So ist es! Ob Rot oder Schwarz – wir gehören alle zur gleichen Art. Die dunkle Farbe hilft uns im Nadelwald, der helle Bauch ist unser Markenzeichen.", storyWrong: "Wir sind wandelbar! Das Fell kann von Rot bis Schwarz variieren – Hauptsache, der Bauch ist hell." },
+            { q: "Was steht bei uns auf dem Speiseplan? (Tipp: Keine Erdnüsse!)", a: ["Nur Nüsse", "Alles: Samen, Knospen, Insekten", "Nur Beeren", "Nur Baumrinde"], correct: 1, storyCorrect: "Genau! Wir sind Wald-Gourmets. Wichtig: Bitte keine Erdnüsse, da diese uns schaden können – Haselnüsse sind unser Festmahl!", storyWrong: "Nicht ganz! Wir sind Allesfresser. Und ganz wichtig: Keine Erdnüsse, sie schaden uns – füttert uns lieber mit Haselnüssen!" },
+            { q: "Was machen wir im Winter?", a: ["Schlafen", "Winterruhe", "Wandern", "Eisschwimmen"], correct: 1, storyCorrect: "Richtig, Winterruhe! Wir ruhen viel, wachen aber alle paar Tage auf, um zu speisen.", storyWrong: "Kein tiefer Schlaf! Wir sind wie Hotelgäste, die ab und zu aufstehen, um einen kleinen Mitternachtssnack zu suchen." },
+            { q: "Wie viele Junge bekommen wir meist?", a: ["Eins", "Drei bis fünf", "Zehn", "Hundert"], correct: 1, storyCorrect: "Ja! Eine quirlige Truppe hält uns oft auf Trab.", storyWrong: "So viele sind es dann doch nicht! Drei bis fünf kleine Racker halten uns meist auf Trab." },
+            { q: "Wie hoch können wir springen?", a: ["Einen Meter", "Bis zu fünf Meter", "Ten Meter", "Gar nicht"], correct: 1, storyCorrect: "Wahrhaftig! Wir sind die Artisten unter den Tieren.", storyWrong: "Wir schaffen es locker über fünf Meter, wenn der Sprung gut geplant ist!" },
+            { q: "Wer ist unser größter Feind?", a: ["Der Marder", "Der Wind", "Der Baum", "Der Regen"], correct: 0, storyCorrect: "Leider wahr. Ein flinker Marder ist der Schrecken unserer Wipfel-Welt.", storyWrong: "Ganz so einfach ist es nicht. Gegen den Wind kann man sich wehren, aber ein Marder ist ein flinker Gegner." },
+            { q: "Was ist bei Regentonnen im Garten wichtig?", a: ["Es sind Spielplätze", "Ausstiegshilfe (Brett) einlegen", "Deckel offen lassen", "Wasser süßen"], correct: 1, storyCorrect: "Lebenswichtig! Ein Brett als Ausstiegshilfe rettet uns, falls wir hineinfallen.", storyWrong: "Leider nein. Regentonnen sind tödliche Fallen. Bitte immer ein Brett als Ausstiegshilfe einlegen!" }
         ];
 
         let currentQ = 0;
@@ -30,10 +37,11 @@
         function showQuestion() {
             const data = quizData[currentQ];
             app.innerHTML = `
-                <h2 class="text-2xl font-bold mb-6 text-amber-900 font-serif">${data.q}</h2>
+                <div class="mb-4 text-emerald-800 font-semibold text-lg">Haselnuss-Vorrat: ${'🌰'.repeat(score)}</div>
+                <h2 class="text-2xl font-bold mb-6 text-emerald-950 font-serif">${data.q}</h2>
                 <div class="space-y-3">
                     ${data.a.map((opt, i) => `
-                        <button onclick="checkAnswer(${i})" class="w-full p-4 rounded-xl border-2 border-amber-200 hover:bg-amber-50 hover:border-amber-400 transition-all text-left">
+                        <button onclick="checkAnswer(${i})" class="w-full p-4 rounded-xl border-2 border-emerald-200 hover:bg-emerald-50 hover:border-emerald-400 transition-all text-left font-medium">
                             ${String.fromCharCode(65 + i)}) ${opt}
                         </button>
                     `).join('')}
@@ -46,11 +54,13 @@
             if (isCorrect) score++;
             
             app.innerHTML = `
-                <h2 class="text-2xl font-bold mb-6 ${isCorrect ? 'text-green-800' : 'text-red-800'}">
+                <h2 class="text-2xl font-bold mb-6 ${isCorrect ? 'text-emerald-700' : 'text-red-700'}">
                     ${isCorrect ? 'Wahrhaftig!' : 'Ein kleiner Irrtum!'}
                 </h2>
-                <p class="mb-6 italic text-amber-900 font-serif text-lg">${quizData[currentQ].story}</p>
-                <button onclick="next()" class="bg-amber-800 text-white px-8 py-3 rounded-full hover:bg-amber-900 transition-all w-full">Weiter</button>
+                <p class="mb-6 italic text-emerald-900 font-serif text-lg">
+                    ${isCorrect ? quizData[currentQ].storyCorrect : quizData[currentQ].storyWrong}
+                </p>
+                <button onclick="next()" class="bg-emerald-700 text-white px-8 py-3 rounded-full hover:bg-emerald-800 transition-all w-full font-semibold">Weiter</button>
             `;
         };
 
@@ -60,11 +70,17 @@
                 showQuestion();
             } else {
                 app.innerHTML = `
-                    <h2 class="text-3xl font-bold text-amber-900 mb-4 font-serif">Geschafft!</h2>
-                    <p class="text-xl mb-6">Du hast ${score} von ${quizData.length} Punkten gesammelt.</p>
-                    <button onclick="location.reload()" class="bg-amber-100 text-amber-900 px-8 py-3 rounded-full hover:bg-amber-200 transition-all">Erneut versuchen</button>
+                    <h2 class="text-3xl font-bold text-emerald-900 mb-4 font-serif">Geschafft!</h2>
+                    <p class="text-xl mb-6">Dein Haselnuss-Vorrat: ${'🌰'.repeat(score)} (${score} von ${quizData.length})</p>
+                    <button onclick="restart()" class="bg-emerald-100 text-emerald-900 px-8 py-3 rounded-full hover:bg-emerald-200 transition-all font-semibold">Erneut versuchen</button>
                 `;
             }
+        };
+
+        window.restart = () => {
+            currentQ = 0;
+            score = 0;
+            showQuestion();
         };
 
         document.getElementById('startBtn').onclick = showQuestion;
